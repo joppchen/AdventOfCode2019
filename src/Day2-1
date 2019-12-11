@@ -23,6 +23,7 @@ if debug: print(program)
         # rename according to convention in Day2 part 2
     # Add
     
+
 def intcode(program, debug = False):
     """Return a intcode program that has been executed """
     print('\nINTCODE IS RUNNING...\n', 40*'-')
@@ -35,22 +36,24 @@ def intcode(program, debug = False):
         if debug: print('\n', tempList)
         opcode = tempList[0]
         if debug: print('Intcode: ', opcode)
+        pos1, pos2, pos3 = tempList[1], tempList[2], tempList[3]
+
         if opcode == 99:
             if debug: print('Code 99: halting program: ', tempList)
             break
         elif opcode == 1:
             #add
-            if debug: print('add :', program[tempList[1]], 'with: ', program[tempList[2]], 'and put in place: ', tempList[3])
-            thesum = program[tempList[1]] + program[tempList[2]]
+            if debug: print('add :', program[pos1], 'with: ', program[pos2], 'and put in place: ', pos3)
+            thesum = program[pos1] + program[pos2]
             if debug: print('sum: ', thesum)
-            program[tempList[3]] = thesum
+            program[pos3] = thesum
             #print(tempList)
         elif opcode == 2:
             #multiply
-            if debug: print('multiply :', program[tempList[1]], 'with: ', program[tempList[2]], 'and put in place: ', tempList[3])
-            prod = program[tempList[1]] * program[tempList[2]]
+            if debug: print('multiply :', program[pos1], 'with: ', program[pos2], 'and put in place: ', pos3)
+            prod = program[pos1] * program[pos2]
             if debug: print('product: ', prod)
-            program[tempList[3]] = prod
+            program[pos3] = prod
         else:
             #unknown opcode, something went wrong
             print('FOUND WRONG INTCODE: ', opcode)
