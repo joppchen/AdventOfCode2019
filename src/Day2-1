@@ -11,61 +11,34 @@ inputFile = open("../resources/Day2-Input.txt","r").read()
 program = list(map(int, inputFile.split(",")))
 
 debug = False
-if debug: print(program)
 
+def addOrMult(val1, val2, opcode):
+    if opcode == 1: return val1 + val2
+    if opcode == 2: return val1 * val2
 
-# TODO:
-    # refactor and clean up:
-        # rename according to convention in Day2 part 2
-
-def addOrMult(pos1, pos2, opcode):
-    import operator
-    if opcode == 1: return operator.add(pos1, pos2)
-    if opcode == 2: return operator.mul(pos1, pos2)
-    
-
-def intcode(program, debug = False):
+def intcode(program):
     """Return a intcode program that has been executed """
-    if debug: print('\nINTCODE IS RUNNING...\n', 40*'-')
-    
-    if debug: print(program)
-    
-    #For each chunk, execute the opCodes
+    #For each chunk (instruction), execute the opCodes
     for i in range(0,len(program),4):
-        tempList = program[i:i+4]
+        instruction = program[i:i+4]
+        opcode = instruction[0]
 
-        if debug: print('\n', tempList)
-        opcode = tempList[0]
-        if debug: print('Opcode: ', opcode)
-        
-        #addOrMult(program, tempList, opcode)
-
-        if opcode == 99:
-            if debug: print('Code 99: halting program: ', tempList)
-            break
+        if opcode == 99: break
         elif opcode == 1 or opcode == 2:
-            pos1, pos2, pos3 = tempList[1], tempList[2], tempList[3]
-            if debug: print('add or multiply: ', program[pos1], ' with: ', 
-                            program[pos2], ' and put in place: ', pos3)
-            result = addOrMult(program[pos1], program[pos2], opcode)
-            if debug: print('Result: ', result)
-            program[pos3] = result
-        else:
-            #unknown opcode, something went wrong
-            print('FOUND WRONG OPCODE: ', opcode)
-            raise ValueError('Found wrong opcode: ', opcode)
-    
+            x1, x2, x3 = instruction[1], instruction[2], instruction[3]
+            program[x3] = addOrMult(program[x1], program[x2], opcode)
+        else: raise ValueError('Found wrong opcode: ', opcode)
     return program
 
 # Initialize program:
 program[1] = 12
 program[2] = 2
 # Run program:
-program = intcode(program, debug)
-if debug: print(program)
+program = intcode(program)
 print("Result Day 2-1: ", program[0])
 correctAnswer = 4484226
 
+# Unit testing
 import unittest
 class TestMethods(unittest.TestCase):
 
@@ -73,10 +46,10 @@ class TestMethods(unittest.TestCase):
         self.assertEqual('foo'.upper(), 'FOO')
 
     def test_intcode1(self):
-        self.assertEqual(intcode([1,0,0,0,99], False), [2,0,0,0,99])
+        self.assertEqual(intcode([1,0,0,0,99]), [2,0,0,0,99])
 
     def test_intcode2(self):
-        self.assertEqual(intcode([2,3,0,3,99],False), [2,3,0,6,99])
+        self.assertEqual(intcode([2,3,0,3,99]), [2,3,0,6,99])
 
     def test_intcode3(self):
         self.assertEqual(intcode([2,4,4,5,99,0]), [2,4,4,5,99,9801])
