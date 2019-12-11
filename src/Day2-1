@@ -30,13 +30,28 @@ def intcode(program):
         else: raise ValueError('Found wrong opcode: ', opcode)
     return program
 
-# Initialize program:
-program[1] = 12
-program[2] = 2
-# Run program:
-program = intcode(program)
-print("Result Day 2-1: ", program[0])
-correctAnswer = 4484226
+def findNounVerb(program):
+    output = 19690720
+    for noun in range(0, 99):
+        for verb in range (0, 99):
+            program[1], program[2] = noun, verb
+            if intcode(program)[0] == output: break
+    return (noun, verb)
+
+def day2part1(program):
+    # Initialize program:
+    program[1] = 12
+    program[2] = 2
+    # Run program:
+    print("\nResult Day 2-1: ", intcode(program)[0])
+    #correctAnswer = 4484226
+
+#Day 2 Part 1
+day2part1(program)
+
+#Day 2 Part 2
+(noun, verb) = findNounVerb(program)
+print(noun, verb, 'Final result: ', 100 * noun + verb)
 
 # Unit testing
 import unittest
