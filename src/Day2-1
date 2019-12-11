@@ -7,7 +7,7 @@ Created on Tue Dec 10 22:33:56 2019
 """
 
 #file_object = open("/Users/JonPetter/Dropbox_JP/Dropbox/Dokumenter/repos/CodeOfAdvent2019/Day2/Day2-1-Input.rtf")
-file_object = open("Day2-1-Input.txt","r")
+file_object = open("../resources/Day2-Input.txt","r")
 
 #first_line = file_object.readline()
 whole_file = file_object.read()
