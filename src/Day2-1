@@ -1,0 +1,95 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Dec 10 22:33:56 2019
+
+@author: JonPetter
+"""
+
+#file_object = open("/Users/JonPetter/Dropbox_JP/Dropbox/Dokumenter/repos/CodeOfAdvent2019/Day2/Day2-1-Input.rtf")
+file_object = open("Day2-1-Input.txt","r")
+
+#first_line = file_object.readline()
+whole_file = file_object.read()
+file_object.close()
+
+#print(first_line)
+#print(whole_file)
+#
+#print(whole_file[0])
+#print(whole_file[1])
+
+#print(whole_file.split(","))
+#print([map(int, whole_file.split(","))])
+int_list = list(map(int, whole_file.split(",")))
+print(int_list)
+print("length int_list: ", len(int_list))
+length = len(int_list)
+print(length/4)
+print(length%4)
+print(int_list[0:4])
+
+#"Slice" file into chunks of 4 elements, operate on one chunk at a time
+#print(len(whole_file))
+#print(len(whole_file)/4)
+#print(len(whole_file)%4)
+#print(424/4)
+
+
+# TODO:
+    # Return final list
+    # Add real unit testing
+    # refactor and clean up:
+        # move intcode to separate class, maybe as static function
+        # make the current script the main script
+        # clean up file reading
+        # make printing of all calculations optional
+        # rename according to convention in Day2 part 2
+    # Add
+def intcode(int_list):
+    print('\nINTCODE STARTS HERE\n', 40*'-')
+    print(int_list)
+    #For each chunk, execute the opCodes
+    for i in range(0,len(int_list),4):
+        #for x in int_list[i:i+4]:
+        #print(int_list[i:i+4]))
+        tempList = int_list[i:i+4]
+        print('\n', tempList)
+        x = tempList[0]
+        print('Intcode: ', x)
+        if x == 99:
+            print('Code 99: halting program: ', tempList)
+            break
+        elif x == 1:
+            #add
+            print('add :', int_list[tempList[1]], 'with: ', int_list[tempList[2]], 'and put in place: ', tempList[3])
+            thesum = int_list[tempList[1]] + int_list[tempList[2]]
+            print('sum: ', thesum)
+            int_list[tempList[3]] = thesum
+            #print(tempList)
+        elif x == 2:
+            #multiply
+            print('multiply :', int_list[tempList[1]], 'with: ', int_list[tempList[2]], 'and put in place: ', tempList[3])
+            prod = int_list[tempList[1]] * int_list[tempList[2]]
+            print('product: ', prod)
+            int_list[tempList[3]] = prod
+        else:
+            #unknown opcode, something went wrong
+            print('FOUND WRONG INTCODE: ', x)
+    
+    print(int_list)
+    print(int_list[0])
+    
+#intcode(int_list)
+#To do this, before running the program, replace position 1 with the value 12 and replace position 2 with the value 2.
+int_list[1] = 12
+int_list[2] = 2
+intcode(int_list)
+correctAnswer = 4484226
+
+#"Unit testing":
+#intcode([1,0,0,0,99])
+#intcode([2,3,0,3,99])
+#intcode([2,4,4,5,99,0])
+#intcode([1,1,1,4,99,5,6,0,99])
+#intcode([1,9,10,3,2,3,11,0,99,30,40,50])
