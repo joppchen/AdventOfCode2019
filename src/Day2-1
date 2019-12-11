@@ -6,85 +6,63 @@ Created on Tue Dec 10 22:33:56 2019
 @author: JonPetter
 """
 
-#file_object = open("/Users/JonPetter/Dropbox_JP/Dropbox/Dokumenter/repos/CodeOfAdvent2019/Day2/Day2-1-Input.rtf")
-file_object = open("../resources/Day2-Input.txt","r")
+inputFile = open("../resources/Day2-Input.txt","r").read()
 
-#first_line = file_object.readline()
-whole_file = file_object.read()
-file_object.close()
+program = list(map(int, inputFile.split(",")))
 
-#print(first_line)
-#print(whole_file)
-#
-#print(whole_file[0])
-#print(whole_file[1])
-
-#print(whole_file.split(","))
-#print([map(int, whole_file.split(","))])
-int_list = list(map(int, whole_file.split(",")))
-print(int_list)
-print("length int_list: ", len(int_list))
-length = len(int_list)
-print(length/4)
-print(length%4)
-print(int_list[0:4])
-
-#"Slice" file into chunks of 4 elements, operate on one chunk at a time
-#print(len(whole_file))
-#print(len(whole_file)/4)
-#print(len(whole_file)%4)
-#print(424/4)
+debug = False
+if debug: print(program)
 
 
 # TODO:
-    # Return final list
     # Add real unit testing
     # refactor and clean up:
         # move intcode to separate class, maybe as static function
         # make the current script the main script
-        # clean up file reading
         # make printing of all calculations optional
         # rename according to convention in Day2 part 2
     # Add
-def intcode(int_list):
-    print('\nINTCODE STARTS HERE\n', 40*'-')
-    print(int_list)
+    
+def intcode(program, debug = False):
+    """Return a intcode program that has been executed """
+    print('\nINTCODE IS RUNNING...\n', 40*'-')
+    
+    if debug: print(program)
+    
     #For each chunk, execute the opCodes
-    for i in range(0,len(int_list),4):
-        #for x in int_list[i:i+4]:
-        #print(int_list[i:i+4]))
-        tempList = int_list[i:i+4]
-        print('\n', tempList)
-        x = tempList[0]
-        print('Intcode: ', x)
-        if x == 99:
-            print('Code 99: halting program: ', tempList)
+    for i in range(0,len(program),4):
+        tempList = program[i:i+4]
+        if debug: print('\n', tempList)
+        opcode = tempList[0]
+        if debug: print('Intcode: ', opcode)
+        if opcode == 99:
+            if debug: print('Code 99: halting program: ', tempList)
             break
-        elif x == 1:
+        elif opcode == 1:
             #add
-            print('add :', int_list[tempList[1]], 'with: ', int_list[tempList[2]], 'and put in place: ', tempList[3])
-            thesum = int_list[tempList[1]] + int_list[tempList[2]]
-            print('sum: ', thesum)
-            int_list[tempList[3]] = thesum
+            if debug: print('add :', program[tempList[1]], 'with: ', program[tempList[2]], 'and put in place: ', tempList[3])
+            thesum = program[tempList[1]] + program[tempList[2]]
+            if debug: print('sum: ', thesum)
+            program[tempList[3]] = thesum
             #print(tempList)
-        elif x == 2:
+        elif opcode == 2:
             #multiply
-            print('multiply :', int_list[tempList[1]], 'with: ', int_list[tempList[2]], 'and put in place: ', tempList[3])
-            prod = int_list[tempList[1]] * int_list[tempList[2]]
-            print('product: ', prod)
-            int_list[tempList[3]] = prod
+            if debug: print('multiply :', program[tempList[1]], 'with: ', program[tempList[2]], 'and put in place: ', tempList[3])
+            prod = program[tempList[1]] * program[tempList[2]]
+            if debug: print('product: ', prod)
+            program[tempList[3]] = prod
         else:
             #unknown opcode, something went wrong
-            print('FOUND WRONG INTCODE: ', x)
+            print('FOUND WRONG INTCODE: ', opcode)
     
-    print(int_list)
-    print(int_list[0])
+    return program
     
-#intcode(int_list)
 #To do this, before running the program, replace position 1 with the value 12 and replace position 2 with the value 2.
-int_list[1] = 12
-int_list[2] = 2
-intcode(int_list)
+program[1] = 12
+program[2] = 2
+program = intcode(program, debug)
+if debug: print(program)
+print("Result Day 2-1: ", program[0])
 correctAnswer = 4484226
 
 #"Unit testing":
