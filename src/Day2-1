@@ -12,54 +12,34 @@ program = list(map(int, inputFile.split(",")))
 import copy
 program_init = copy.deepcopy(program)
 
-debug = False
-if debug: print(program)
-
 def addOrMult(val1, val2, opcode):
     if opcode == 1: return val1 + val2
     if opcode == 2: return val1 * val2
 
 def intcode(program):
     """Return a intcode program that has been executed """
-    if debug: print('\nINTCODE IS RUNNING...\n', 40*'-')
-    if debug: print(program)
     
     #For each chunk (instruction), execute the opCodes
     for i in range(0,len(program),4):
         instruction = program[i:i+4]
-        if debug: print('\n', instruction)
         opcode = instruction[0]
-        if debug: print('Opcode: ', opcode)
 
-        if opcode == 99:
-            if debug: print('Code 99: halting program: ', instruction)
-            break
+        if opcode == 99: break
         elif opcode == 1 or opcode == 2:
             x1, x2, x3 = instruction[1], instruction[2], instruction[3]
-            if debug: print('add or multiply: ', program[x1], ' with: ',
-                            program[x2], ' and put in place: ', x3)
-            result = addOrMult(program[x1], program[x2], opcode)
-            if debug: print('Result: ', result)
-            program[x3] = result
-            #program[x3] = addOrMult(program[x1], program[x2], opcode)
-        else:
-            print('FOUND WRONG OPCODE: ', opcode)
-            raise ValueError('Found wrong opcode: ', opcode)
+            program[x3] = addOrMult(program[x1], program[x2], opcode)
+        else: raise ValueError('Found wrong opcode: ', opcode)
     return program
 
 def findNounVerb(program):
-    import copy
+    #import copy
     program_init = copy.deepcopy(program)
-    if debug: print('\nprogram_init: ', program_init)
     output = 19690720
     for noun in range(0, 99):
         for verb in range (0, 99):
             program[1], program[2] = noun, verb
-            if intcode(program)[0] == output:
-                return (noun, verb)
-            else:
-                if debug: print('program_init: ', program_init)
-                program = copy.deepcopy(program_init)
+            if intcode(program)[0] == output: return (noun, verb)
+            else: program = copy.deepcopy(program_init)
 
 def day2part1(program):
     # Initialize program:
