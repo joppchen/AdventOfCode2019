@@ -6,31 +6,81 @@ Created on Thu Dec 12 23:49:05 2019
 @author: JonPetter
 """
 
-OK = [False] * 4
-print(OK)
-counter = 0
+def checkCriteria(rangeStart, rangeStop):
+    OK = [False] * 5
+    counter = 0
 
-#Check range
-#Criterion 1 is always fulfilled, number is within the range given
-OK[0] = True
+    #Check range
+    #Criterion 1 is always fulfilled, number is within the range given
+    OK[0] = True
 
-print('OK initielt: ', OK)
-#for i in range(145852, 616942):
-for i in range(145852, 616942):
-#    print(i)
-    #Criterion 2: 6 digits
-    if len(str(i)) == 6: OK[1] = True
-    #Criterion 3 and 4
-    istr = str(i)
-    OK[3] = True
-    for k in range(0,len(istr)-1):
-        pair = istr[k:k+2]
-        #Criterion 3: Always at least one pair
-        if pair[0] == pair[1]: OK[2] = True
-        #Criterion 4: Never decreasing integer value
-        if pair[0] > pair[1]: OK[3] = False
-    if all(OK): counter += 1
+    print('OK initielt: ', OK)
+    # print(list(range(rangeStart, rangeStop+1)))
+    pairs = []
+    triples = []
+    for i in range(rangeStart, rangeStop+1):
+    #    print(i)
+        #Criterion 2: 6 digits
+        if len(str(i)) == 6: OK[1] = True
+        else: break
+        # if OK[1] == False: break
+
+        #Criterion 3 and 4
+        istr = str(i)
+        OK[2] = True
+        for k in range(0,len(istr)-1):
+            pair = istr[k:k+2]
+            #Criterion 4: Never decreasing integer value
+            if pair[0] > pair[1]: OK[2] = False
+
+            #Criterion 3: Always at least one pair
+            if pair[0] == pair[1]:
+                OK[3] = True
+                if len(pairs) == 0: pairs.append(pair[0])
+                elif pair[0] != pairs[-1]: pairs.append(pair[0])
+                # if len(pairs) > 0 and pair[0] != pairs[0]: pairs.append(pair[0])
+                # if pair[0] != any(pairs): pairs.append(pair[0])
+                # print('i: ', i, ' pairs: ', pairs)
+                # if pair[0] != any(acceptedNumbers): acceptedNumbers.append(pair[0])
+                # print(acceptedNumbers)
+        # if not OK[2] or not OK[3]: break
+        # if OK[2] == False: break
+
+        # Criterion 5:
+        # OK[4] = True
+        for l in range (0, len(istr)-2):
+            triple = istr[l:l+3]
+            # print('triple: ', triple)
+            if triple[0] == triple[1] and triple[1] == triple[2]:
+                # print('triple[0]: ', triple[0], 'triples: ', triples)
+                if len(triples) == 0: triples.append(triple[0])
+                elif triple[0] != triples[-1]:
+                    # print('triples[-1]: ', triples[-1])
+                    triples.append(triple[0])
+                # if triple[0] != any(triples): triples.append(triple[0])
+        # print('i: ', i)
+        # print('pairs: ', pairs, 'triples: ', triples)
+        pairstoremove = []
+        for triple in triples:
+            for pair in pairs:
+                if pair == triple:
+                    # pairs.remove(pair)
+                    pairstoremove.append(pair)
+        for remove in pairstoremove:
+            pairs.remove(remove)
+        # print('pairs: ', pairs)
+        if len(pairs) > 0: OK[4] = True
+
+
+        if all(OK): counter += 1
+
+        OK[1:] = [False] * 4
+        pairs = []
+        triples = []
+        # print(pairs, triples)
     
-    OK[1:] = [False] * 3
-    
-print('Number of valid possible different passwords in range:', counter)
+    print('Number of valid possible different passwords in range:', counter)
+    # Correct answer Day 4 Part 1: 1767
+
+checkCriteria(145852, 616942)
+# checkCriteria(112222,112222)
